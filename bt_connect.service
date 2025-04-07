@@ -1,0 +1,18 @@
+[Unit]
+Description=Bluetooth Auto-Connect
+After=bluetooth.target network.target
+Requires=bluetooth.service
+
+[Service]
+Type=simple
+# Ждем 20 секунд перед запуском (или используйте проверку готовности Bluetooth)
+ExecStartPre=/bin/sleep 20
+# Запуск Python-скрипта (или .sh-скрипта)
+# ExecStart=/usr/bin/python3 /путь/к/скрипту.py
+# Или для .sh:
+ExecStart=/usr/local/bin/bt_connect.sh
+Restart=on-failure
+RestartSec=5s
+
+[Install]
+WantedBy=multi-user.target
