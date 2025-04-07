@@ -1,7 +1,7 @@
 1. README.md
 
 markdown
-Copy
+
 # Bluetooth Auto-Connect Service
 
 Automatically connects to a specified Bluetooth device on system startup using `bluetoothctl`.
@@ -20,6 +20,7 @@ sudo cp scripts/bt_connect.sh /usr/local/bin/
 sudo cp systemd/bluetooth-auto-connect.service /etc/systemd/system/
 sudo systemctl daemon-reload
 sudo systemctl enable --now bluetooth-auto-connect.service
+```
 ⚙ Configuration
 Edit MAC address in:
 
