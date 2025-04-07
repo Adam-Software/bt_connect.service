@@ -24,9 +24,10 @@ sudo systemctl enable --now bluetooth-auto-connect.service
 ⚙ Configuration
 Edit MAC address in:
 
-bash
-Copy
+```bash
 nano scripts/bt_connect.sh  # Change DEVICE_MAC value
+```
+
 📚 Documentation
 Troubleshooting Guide
 
@@ -46,23 +47,22 @@ Open a pull request
 📜 License
 MIT License
 
-Copy
-
 **2. TROUBLESHOOTING.md**
 ```markdown
 # Troubleshooting Guide
-
+```
 ## 🔍 Basic Checks
 1. Verify Bluetooth is active:
    ```bash
    rfkill list bluetooth
    sudo rfkill unblock bluetooth
+   ```
 Check device pairing status:
 
-bash
-Copy
+```bash
 bluetoothctl
 paired-devices
+```
 🚨 Common Issues
 1. Connection Timeout
 Symptoms: Service starts but device doesn't connect
@@ -70,30 +70,31 @@ Solutions:
 
 Increase wait time in service file:
 
-ini
-Copy
+```ini
 ExecStartPre=/bin/sleep 30  # Increased from 20
+```
 Manual connection test:
 
-bash
-Copy
+```bash
 echo -e "connect XX:XX:XX:XX:XX:XX\nquit" | bluetoothctl
+```
+
 2. Service Failure
 Symptoms: Service crashes repeatedly
 Debug steps:
 
-bash
-Copy
+```bash
 journalctl -u bluetooth-auto-connect.service -f -n 50
 sudo systemctl reset-failed bluetooth-auto-connect.service
+```
+
 3. Permission Issues
 Fix:
 
-bash
-Copy
+```bash
 sudo chown root:root /usr/local/bin/bt_connect.sh
 sudo chmod 755 /usr/local/bin/bt_connect.sh
-Copy
+```
 
 **3. scripts/bt_connect.sh**
 ```bash
@@ -102,10 +103,11 @@ Copy
 DEVICE_MAC="XX:XX:XX:XX:XX:XX"  # Replace with your device's MAC address
 
 echo -e "connect $DEVICE_MAC\nquit" | bluetoothctl
+```
+
 4. systemd/bluetooth-auto-connect.service
 
-ini
-Copy
+```ini
 [Unit]
 Description=Bluetooth Auto-Connect Service
 After=bluetooth.target network.target
@@ -120,3 +122,4 @@ RestartSec=5s
 
 [Install]
 WantedBy=multi-user.target
+```
