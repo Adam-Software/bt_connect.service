@@ -1,7 +1,3 @@
-README.md (markdown file with instructions):
-
-markdown
-Copy
 # Bluetooth Auto-Connect Service
 
 This service automatically connects to a specified Bluetooth device on system startup.
