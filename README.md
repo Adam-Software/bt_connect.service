@@ -1,3 +1,7 @@
+1. README.md
+
+markdown
+Copy
 # Bluetooth Auto-Connect Service
 
 Automatically connects to a specified Bluetooth device on system startup using `bluetoothctl`.
@@ -16,11 +20,12 @@ sudo cp scripts/bt_connect.sh /usr/local/bin/
 sudo cp systemd/bluetooth-auto-connect.service /etc/systemd/system/
 sudo systemctl daemon-reload
 sudo systemctl enable --now bluetooth-auto-connect.service
-
 ⚙ Configuration
 Edit MAC address in:
-nano scripts/bt_connect.sh  # Change DEVICE_MAC value
 
+bash
+Copy
+nano scripts/bt_connect.sh  # Change DEVICE_MAC value
 📚 Documentation
 Troubleshooting Guide
 
@@ -40,10 +45,9 @@ Open a pull request
 📜 License
 MIT License
 
+Copy
 
----
-
-**Файл 2: TROUBLESHOOTING.md**
+**2. TROUBLESHOOTING.md**
 ```markdown
 # Troubleshooting Guide
 
@@ -52,49 +56,66 @@ MIT License
    ```bash
    rfkill list bluetooth
    sudo rfkill unblock bluetooth
-
 Check device pairing status:
 
+bash
+Copy
 bluetoothctl
 paired-devices
-
 🚨 Common Issues
 1. Connection Timeout
 Symptoms: Service starts but device doesn't connect
 Solutions:
 
 Increase wait time in service file:
+
+ini
+Copy
 ExecStartPre=/bin/sleep 30  # Increased from 20
 Manual connection test:
-echo -e "connect XX:XX:XX:XX:XX:XX\nquit" | bluetoothctl
 
+bash
+Copy
+echo -e "connect XX:XX:XX:XX:XX:XX\nquit" | bluetoothctl
 2. Service Failure
 Symptoms: Service crashes repeatedly
 Debug steps:
 
+bash
+Copy
 journalctl -u bluetooth-auto-connect.service -f -n 50
 sudo systemctl reset-failed bluetooth-auto-connect.service
-
 3. Permission Issues
 Fix:
 
+bash
+Copy
 sudo chown root:root /usr/local/bin/bt_connect.sh
 sudo chmod 755 /usr/local/bin/bt_connect.sh
+Copy
 
-📋 Advanced Diagnostics
-Monitor Bluetooth logs:
+**3. scripts/bt_connect.sh**
+```bash
+#!/bin/bash
+# Bluetooth auto-connect script
+DEVICE_MAC="XX:XX:XX:XX:XX:XX"  # Replace with your device's MAC address
 
-sudo btmon
+echo -e "connect $DEVICE_MAC\nquit" | bluetoothctl
+4. systemd/bluetooth-auto-connect.service
 
-Test without service:
+ini
+Copy
+[Unit]
+Description=Bluetooth Auto-Connect Service
+After=bluetooth.target network.target
+Requires=bluetooth.service
 
-/usr/local/bin/bt_connect.sh
+[Service]
+Type=simple
+ExecStartPre=/bin/sleep 20
+ExecStart=/usr/local/bin/bt_connect.sh
+Restart=on-failure
+RestartSec=5s
 
-Re-pair device:
-
-bluetoothctl
-remove XX:XX:XX:XX:XX:XX
-pair XX:XX:XX:XX:XX:XX
-trust XX:XX:XX:XX:XX:XX
-
-
+[Install]
+WantedBy=multi-user.target
